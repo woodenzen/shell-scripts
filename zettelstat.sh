@@ -5,7 +5,7 @@ ZK="/Users/will/Dropbox/zettelkasten/"
 cd $ZK
 
 # Current Zettel
-zettel="Python 202110091918.md"
+zettel="A-Dispositional Differences In Cognitive Motivation 202012230627.md"
 # Word count
 words=$(cat "$zettel" | wc -w)
 # NOT WORKING  
@@ -30,6 +30,14 @@ end=$(date -j -f "%Y%m%d%H%M%S" $cdate +%s)
 now=$(date +%s)
 # Ratio of link integration
 ratio=$(printf "%.1f\n" "$(echo "scale=10;$inlinks / $outlinks*100" | bc)")
+
+#  for i in $ZK"*.md"
+#  grep -wls '#sturcture-note' $i > ~/Downloads/notelinks.txt
+#     # number=$(grep -c "\[\[" "$f" ) 
+#     for a in ~/Downloads/notelinks.txt
+#     echo  "text"
+#     done 
+#  done   
 
 # output
 echo "Words:    " $words
