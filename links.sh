@@ -7,19 +7,26 @@ IFS=$'\n'
 
 cd ~/Dropbox/zettelkasten
 
-rm ~/Downloads/notelinks.txt
+FILE=~/Downloads/notelinks.txt
+if [[ -f "$FILE" ]]; then
+    rm $FILE
+fi
 
-for i in $(grep -wlsi '@mcpherson' *.md  )
+group="@mcpherson"
+
+for i in $(grep -wlsi $group *.md)
 do
-  outbound=$(egrep -E -e '\d{12}' $i | wc -l)
+  ((count++))
+  outbound=$(egrep -E -e '\d{12}' $i | wc -l) 
   uuid=$(echo $i | sed 's/.*\(.\{12\}\)\.md/\1/')
   inbound=$(egrep $uuid *.md | wc -l) 
   sum=$(($outbound + $inbound))
-  echo $i ' '$sum ': '$outbound  ' '$inbound ' ' >> ~/Downloads/notelinks.txt 
+  echo $i ' '$sum ': '$outbound ' '$inbound ' ' >> ~/Downloads/notelinks.txt 
 done  
 
 awk -F" {2,}" '{printf $1 " - Total Links: " $2" (In "$4" - Out "$3")\n"}' ~/Downloads/notelinks.txt | sort -t: -nrk 2,2 
 echo "----------"
-awk -F" {2,}" '{SUM2+=$2}{SUM3+=$3}{SUM4+=$4}END{printf "Group Total Links: " SUM2 " (In "SUM4" - Out "SUM3")"}' ~/Downloads/notelinks.txt
-
+echo $count "Zettel in Group" $group
+#  - '$count' used to correct for UUID as a link.
+awk -F" {2,}" '{SUM2+=$2}{SUM3+=$3}{SUM4+=$4}END{printf "Group Total Links: " SUM2 - '$count' " (In "SUM4" - Out "SUM3 - '$count'")"}' ~/Downloads/notelinks.txt
 IFS="$OIFS"
