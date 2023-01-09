@@ -1,6 +1,5 @@
 # How many files in folder do not contain a string
 # Usage: doesnotcontain.sh <folder> <string>
-# Example: doesnotcontain.sh /home/username/Downloads/ "string"
 # Author: Will Simpson and GPT-3
 
 # check if folder exists
