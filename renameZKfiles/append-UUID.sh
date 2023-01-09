@@ -1,17 +1,24 @@
-# Description: append UUID to the end of a filename.
+# Description: Gets UUID and the ctime from YAML Variables and the mtime from the file metadata.
 
-# find in all the files of a directory the occuance of a UUID in the form UUID   ›[[202202211005]]
+# variables
 ZK=/Users/will/Dropbox/Projects/shell_scripts/renameZKfiles/JAMM328
 cd '/Users/will/Dropbox/Projects/shell_scripts/renameZKfiles/JAMM328'
+
 OIFS="$IFS"
 IFS=$'\n'
 for filename in $ZK/*.md; do
+    # get the filename
     title=$( basename "$filename" )
-    # sed -n "s/UUID.*›\[\[\(.*\)\]\]/\1/p" "$title" 
+    # find in all the files of a directory the occuance of a UUID in the form UUID   ›[[202202211005]]
+    UUID=$(sed -n "s/UUID.*›\[\[\(.*\)\]\]/\1/p" "$title") 
+    # find the occurances of a date in the form 02-02-2021 10:05 AM
     ctime=$(sed -n "s/.* \(02.*[AM,PM]\)$/\1/p" "$title" | sed 's/-/\//g')
+    # get the mtime from the file metadata
     mtime=$(date -r $title +'%m/%d/%Y %H:%M %p') 
-    echo $title :: mtime = $mtime :: ctime = $ctime
-    SetFile -d  $ctime $filename
+    # print the results
+    echo $UUID $title :: mtime = $mtime :: ctime = $ctime
+    # set the ctime to the file metadata
+    SetFile -d $ctime $filename
 done
 IFS="$OIFS"
 
